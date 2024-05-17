@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="earthquake.css">
+    <link rel="stylesheet" href="prism.css">
+
+    <title>Earthquake</title>
+</head>
+<body>
+
+    <section class="bg" id="vanta"><!--NAVIGATION BAR-->
+        <div class="navbar">
+            <div class="element">
+                <a href="index.html">Home</a>
+            </div>
+            <div class="element">
+                <a href="dengue.html">Dengue</a>
+            </div>
+            <div class="element">
+                <a href="earthquake.html">Earthquake</a>
+            </div>
+            <div class="element">
+                <a href="covid.html">Covid</a>
+            </div>
+        </div>
+        
+        <div class="title">
+            <h3>Visualizing Seismic Activity: <br>A Python-Based Analysis of Global Earthquake Patterns</h3>
+            
+        </div>
+    </section>
+
+    <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+    
+    <div class="whole">
+
+        <div class="contents">
+            <h6>Table of Contents</h6>
+            <ul>
+              <li><a href="#section1">What is Earthquake?</a></li>
+              <li><a href="#section2">Exploratory Data Analysis</a></li>
+              <li><a href="#section3">Plotting the Longitude and Latitude of the Dataset</a></li>
+              <li><a href="#section4">Conclusion</a></li>
+            </ul>
+          </div>
+        
+        <div>
+            <h6 id="section1">
+                <strong>What is Earthquake?</strong>
+            </h6>
+        </div>
+
+        <div class="introduction">
+            <p>
+                Earthquake is a natural phenomenon that occurs when the tectonic plates of the Earth's
+                crust move and collide, releasing energy in the form of seismic waves. This results in
+                vibrations and shaking, and can cause damage and injuries. Earthquakes are most commonly
+                caused by the movement of tectonic plates but can also be caused by human activities.
+                They are measured by the Richter scale. <br> <br>
+
+                Today, we will visualize the dataset that I found on <a href="https://www.kaggle.com/datasets/usgs/earthquake-database">Kaggle</a>. <br><br>
+
+                First, we need to import the necessary dependencies for this project.
+            
+            </p>
+        </div>
+
+
+        <div>
+            <h6 id="section2">
+                <strong>Exploratory Data Analysis</strong>
+            </h6>
+        </div>
+
+        <div class="code">
+            <pre><code class="language-python">
+                !pip install --upgrade geopandas
+                import pandas as pd
+                import numpy as np
+                from shapely.geometry import Point
+                import geopandas as gpd
+                from geopandas import GeoDataFrame
+                import plotly.express as px
+                import matplotlib.pyplot as plt
+
+
+                filename = "/content/database.csv"
+                data = pd.read_csv(filename)
+                data.head(5)
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/18.png" alt="">
+        </div>
+
+        <div class="code">
+            <pre><code class="language-python">
+                data.info()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/19.png" alt="">
+        </div>
+
+        <div>
+            <pre><code class="language-python">
+                data.isnull().sum()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/20.png" alt="">
+        </div>
+
+        <p>
+            I'm going to remove all the columns with lots of missing values.
+        </p>
+
+        <div>
+            <pre><code class="language-python">
+                data.drop(['Depth Error'], axis=1, inplace=True)
+                data.drop(['Depth Seismic Stations'], axis=1, inplace=True)
+                data.drop(['Magnitude Error'], axis=1, inplace=True)
+                data.drop(['Magnitude Seismic Stations'], axis=1, inplace=True)
+                data.drop(['Azimuthal Gap'], axis=1, inplace=True)
+                data.drop(['Horizontal Distance'], axis=1, inplace=True)
+                data.drop(['Horizontal Error'], axis=1, inplace=True)
+                data.drop(['Root Mean Square'], axis=1, inplace=True)
+                data.info()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/21.png" alt="">
+        </div>
+
+
+        <div>
+            <pre><code class="language-python">
+                data.describe()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/22.png" alt="">
+        </div>
+
+        <p>Now I'm going to remove outliers using mean and standard deviation.</p>
+
+        <div>
+            <pre><code class="language-python">
+                upper_limit= data['Depth'].mean() + 3 * data['Depth'].std ()
+                lower_limit = data['Depth'].mean() - 3 * data['Depth'].std () 
+                data = data[(data['Depth'] < upper_limit) & (data['Depth'] > lower_limit)]
+            </code></pre>
+        </div>
+
+
+        <div>
+            <h6 id="section3">
+                <strong>Plotting the Longitude and Latitude of the Dataset</strong>
+            </h6>
+        </div>
+
+
+
+        <p>
+            Now plotting the Latitude and Longitude of where earthquakes usually occur
+            around the world.
+        </p>
+
+        <div>
+            <pre><code class="language-python">
+                geometry = [Point(xy) for xy in zip(data['Longitude'], data['Latitude'])]
+                gdf = GeoDataFrame(data, geometry=geometry)   
+                
+                #this is a simple map that goes with geopandas
+                world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+                gdf.plot(ax=world.plot(figsize=(15, 11)), marker='o', color='red', markersize=15);
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/23.png" alt="">
+        </div>
+
+        <p>
+            These are the specific locations around the world where earthquakes have been recorded and
+            documented in our database. These locations were determined by analyzing the data on seismic
+            activity and pinpointing the areas where earthquakes have occurred in the past. The data was
+            collected and analyzed over a certain period of time,
+            and we have compiled a comprehensive list of locations where earthquakes have been reported.
+        </p>
+
+        <div>
+            <h6 id="section4">
+                <strong>Conclusion</strong>
+            </h6>
+        </div>
+
+        <p>
+            It is important to be prepared and aware of the risks associated with earthquakes because
+            they can cause significant damage to buildings and infrastructure, as well as injuries or fatalities.
+            Being prepared for an earthquake can help to minimize the potential impact and reduce the risk of harm 
+            to people and property. This can include having an emergency plan in place, knowing the safe places to 
+            go during an earthquake, and having emergency supplies on hand. Being aware of the risks associated with 
+            earthquakes also allows people to make informed decisions about where to live, work, and travel, and to take 
+            steps to protect themselves and their property. Additionally,being prepared and aware can
+            also help in the immediate response and recovery process after an earthquake.
+        </p>
+
+
+
+    </div>
+
+
+
+<script src="prism.js"></script>
+<script src="script.js"></script>
+
+<script src="earthquake.min.js"></script>
+<script src="vanta.globe.min.js"></script>
+<script>
+
+const name = document.getElementById("vanta"); 
+VANTA.GLOBE({
+  el: name,
+  mouseControls: true,
+  touchControls: true,
+  gyroControls: false,
+  scale: 1.00,
+  scaleMobile: 1.00,
+  color: 0xee6c4d,
+  backgroundColor: 0x293241
+})
+</script>
+
+    
+</body>
+</html>

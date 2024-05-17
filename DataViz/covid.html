@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="covid.css">
+    <link rel="stylesheet" href="prism.css">
+
+    <title>Covid-19</title>
+</head>
+<body>
+
+    <section class="bg" id="vanta"><!--NAVIGATION BAR-->
+        <div class="navbar">
+            <div class="element">
+                <a href="index.html">Home</a>
+            </div>
+            <div class="element">
+                <a href="dengue.html">Dengue</a>
+            </div>
+            <div class="element">
+                <a href="earthquake.html">Earthquake</a>
+            </div>
+            <div class="element">
+                <a href="covid.html">Covid</a>
+            </div>
+        </div>
+        
+        <div class="title">
+            <h3>Visualizing the Global Impact of COVID-19: <br>A Daily Analysis of Confirmed Cases, Deaths, and Recoveries with Python</h3>
+            
+        </div>
+    </section>
+
+    <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+    
+    <div class="whole">
+
+        <div class="contents">
+            <h6>Table of Contents</h6>
+            <ul>
+              <li><a href="#section1">What is Covid?</a></li>
+              <li><a href="#section2">Exploratory Data Analysis</a></li>
+              <li><a href="#section3">Top 10 Countries of Most Active Cases</a></li>
+              <li><a href="#section4">Top 10 countries of Death Cases</a></li>
+              <li><a href="#section5">Top 10 countries of Recovered Cases</a></li>
+              <li><a href="#section7">Covid Cases Stats per Month of 2020</a></li>
+              <li><a href="#section9">Conclusion</a></li>
+            </ul>
+        </div>
+        
+        <div>
+            <h6 id="section1">
+                <strong>What is Covid?</strong>
+            </h6>
+        </div>
+
+        <div class="introduction">
+            <p>
+                COVID-19 is a highly contagious respiratory illness caused by the novel coronavirus. 
+                It first emerged in Wuhan, China in December 2019 and has since spread globally, 
+                leading to a worldwide pandemic. Symptoms include fever, coughing and difficulty breathing. 
+                It can lead to severe illness or death. It's important to practice social distancing and hygiene 
+                measures such as wearing masks and washing hands.
+                Vaccines are now available for protection against the virus.<br> <br>
+
+                Today, we will visualize the dataset that I found on <a href="https://www.kaggle.com/datasets/imdevskp/corona-virus-report">Kaggle</a>. <br><br>
+
+                First, we need to import the necessary dependencies for this project.
+            
+            </p>
+        </div>
+
+        <div>
+            <h6 id="section2">
+                <strong>Exploratory Data Analysis</strong>
+            </h6>
+        </div>
+
+        <div class="code">
+            <pre><code class="language-python">
+                import numpy as np
+                import pandas as pd
+                import plotly.express as  px
+                import matplotlib.pyplot as plt
+                import plotly.graph_objects as go
+                worldometer = pd.read_csv('/content/worldometer_data.csv')
+                countrywise = pd.read_csv('/content/country_wise_latest.csv')
+                daywise = pd.read_csv('/content/day_wise.csv')
+                countrywise.isnull().sum()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/24.png" alt="">
+        </div>
+
+        <p>
+            The dataset doesn't have null values.
+        </p>
+
+        <div class="code">
+            <pre><code class="language-python">
+                countrywise.info()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/26.png" alt="">
+        </div>
+
+        <p>
+            No need to change the datatypes.
+        </p>
+
+        <div class="code">
+            <pre><code class="language-python">
+                countrywise.describe()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/25.png" alt="">
+        </div>
+
+        <p>
+            The dataset doesn't have null values.
+        </p>
+
+
+
+
+
+        <div class="code">
+            <pre><code class="language-python">
+                daywise.info()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/27.png" alt="">
+        </div>
+
+        <div>
+            <pre><code class="language-python">
+                daywise['Date'] = pd.to_datetime(daywise['Date'])
+                daywise['Month'] = daywise['Date'].dt.month
+                activeCaseinCountries = countrywise[['Country/Region','Active']].sort_values(by=['Active'],ascending=False).head(10)
+                activeCaseinCountries
+            </code></pre>
+        </div>
+
+
+        <div class="image">
+            <img src="img/28.png" alt="">
+        </div>
+
+        <div>
+            <h6 id="section3">
+                <strong>Top 10 Countries of Most Active Cases</strong>
+            </h6>
+        </div>
+
+        <div>
+            <pre><code class="language-python">
+                fig = px.bar(activeCaseinCountries, x='Active', y='Country/Region',color='Country/Region', title='Top 10 Countries of Most Active Cases')
+                fig.show()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/29.png" alt="">
+        </div>
+
+
+        <p>
+            The country with most active cases is US.
+        </p>
+
+
+
+
+
+
+        <div>
+            <h6 id="section4">
+                <strong>Top 10 countries of Death Cases</strong>
+            </h6>
+        </div>
+
+
+        
+        <div>
+            <pre><code class="language-python">
+                deathCaseinCountries = countrywise[['Country/Region','Deaths']].sort_values(by=['Deaths'],ascending=False).head(10)
+                deathCaseinCountries
+            </code></pre>
+        </div>
+        
+
+        <div class="image">
+            <img src="img/30.png" alt="">
+        </div>
+
+
+        <div>
+            <pre><code class="language-python">
+                fig = px.bar(deathCaseinCountries, x='Deaths', y='Country/Region',color='Country/Region', title='Top 10 Countries of Death Cases')
+                fig.show()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/31.png" alt="">
+        </div>
+
+        <p>The Country with the most death cases is US.</p>
+
+
+        <div>
+            <h6 id="section5">
+                <strong>Top 10 countries of Recoveries</strong>
+            </h6>
+        </div>
+        <div>
+            <pre><code class="language-python">
+                recoveredCaseinCountries = countrywise[['Country/Region','Recovered']].sort_values(by=['Recovered'],ascending=False).head(10)
+                recoveredCaseinCountries
+            </code></pre>
+        </div>
+        <div class="image">
+            <img src="img/32.png" alt="">
+        </div>
+        
+
+        <div>
+            <pre><code class="language-python">
+                fig = px.bar(recoveredCaseinCountries, x='Recovered', y='Country/Region',color='Country/Region', title='Top 10 Countries of Recovered Cases')
+                fig.show()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/33.png" alt="">
+        </div>
+        <p>The Country with the most recoveries is Brazil.</p>
+
+
+
+
+
+        <div>
+            <h6 id="section7">
+                <strong>Covid Cases Stats per Month of 2020</strong>
+            </h6>
+        </div>
+        <div>
+            <pre><code class="language-python">
+                casesInMonths = daywise.groupby(['Month'])[['New cases','New deaths','New recovered']].sum()
+                casesInMonths.set_axis(['Active', 'Deaths', 'Recovered'],axis = 'columns',inplace=True)
+                casesInMonths = casesInMonths.sort_values('Active',ascending=False)
+                casesInMonths
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/34.png" alt="">
+        </div>
+        <div>
+            <pre><code class="language-python">
+                anchos = [0.2] * 6
+                fig = go.Figure()
+                fig.add_trace(go.Bar(x = casesInMonths.index,
+                                     y = casesInMonths['Recovered'], 
+                                     width = anchos, name = 'Recovered Case'))
+                fig.add_trace(go.Bar(x = casesInMonths.index,
+                                     y = casesInMonths['Active'], 
+                                     width = anchos, name = 'Active Case'))
+                fig.add_trace(go.Bar(x = casesInMonths.index,
+                                     y = casesInMonths['Deaths'], 
+                                     width = anchos, name = 'Death Case'))
+                
+                
+                fig.update_layout(title =  "Covid Cases Stats per Month of 2020",
+                                  barmode = 'group', title_font_size = 30)
+                fig.update_xaxes(title_text = 'Months')
+                fig.update_yaxes(title_text = "No. of cases")
+                # fig.write_image(path + "figclust1.png")
+                fig.show()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/35.png" alt="">
+        </div>
+        <p>
+            Month 7, aka July has the most Cases and Recovered Cases in the year 2020. We can see that
+            there had been a linear growth in both Cases and Recovered Cases.
+        </p>
+
+        <div>
+            <h6 id="section9">
+                <strong>Conclusion</strong>
+            </h6>
+        </div>
+        <p>
+            When a country has the highest cases of COVID-19, it typically means that the virus has
+            been able to spread widely within that country's population. This can be due to a variety
+            of factors, such as a lack of effective measures to control the spread of the virus, a large
+            population density, or a high number of international travelers coming into the country.
+            It can also indicate a failure of the country's
+            healthcare system to effectively respond to the outbreak. And that may be true for the US.
+        </p>
+
+
+    </div>
+
+
+
+    <script src="prism.js"></script>
+    <script src="script.js"></script>
+
+
+
+    <script src="covid.min.js"></script>
+    <script src="vanta.dots.min.js"></script>
+    <script>
+    const name = document.getElementById("vanta");     
+    VANTA.DOTS({
+      el: name,
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      scale: 1.00,
+      scaleMobile: 1.00,
+      color: 0xee6c4d,
+      color2: 0xee6c4d,
+      backgroundColor: 0x293241,
+      size: 4.50,
+      spacing: 38.00
+    })
+    </script>
+
+
+    
+</body>
+</html>

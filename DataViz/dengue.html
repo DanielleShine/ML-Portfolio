@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dengue.css">
+    <link rel="stylesheet" href="prism.css">
+
+    <title>Dengue</title>
+
+
+
+
+</head>
+
+
+<body>
+
+
+    <section class="bg" id="vanta"><!--NAVIGATION BAR-->
+        <div class="navbar">
+            <div class="element">
+                <a href="index.html">Home</a>
+            </div>
+            <div class="element">
+                <a href="dengue.html">Dengue</a>
+            </div>
+            <div class="element">
+                <a href="earthquake.html">Earthquake</a>
+            </div>
+            <div class="element">
+                <a href="covid.html">Covid</a>
+            </div>
+        </div>
+        
+        <div class="title">
+            <h3>Exploring Dengue Outbreaks through Data Visualization: A Python-based Approach</h3>
+            
+        </div>
+    </section>
+
+    <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+    
+    <div class="whole">
+
+        <div class="contents">
+            <h6>Table of Contents</h6>
+            <ul>
+              <li><a href="#section1">What is Dengue?</a></li>
+              <li><a href="#section2">Data Manipulation</a></li>
+              <li><a href="#section3">Which Year Has The Most Cases?</a></li>
+              <li><a href="#section4">Dengue Trend From 2016-2021</a></li>
+              <li><a href="#section5">How Fatal is Dengue?</a></li>
+              <li><a href="#section6">Which Region Has The Highest Cases of Dengue Fever?</a></li>
+              <li><a href="#section7">Which Region Has The Highest Cases Per Month and Year?</a></li>
+              <li><a href="#section8">Qhich Month andYear Has the Most Cases of Dengue?</a></li>
+              <li><a href="#section9">Conclusion</a></li>
+            </ul>
+          </div>
+        
+        <div>
+            <h6 id="section1">
+                <strong>What is Dengue?</strong>
+            </h6>
+        </div>
+
+        <div class="introduction">
+            <p>
+                Dengue is a viral infection caused by one of four closely related dengue viruses.
+                It is spread to humans by the Aedes mosquito, which also spreads the Zika and Chikungunya viruses.
+                Dengue fever is common in tropical and subtropical climates across the world,
+                particularly in urban and semi-urban settings. Dengue symptoms normally develop 4-7 days after infection
+                and can range from minor to severe. Mild dengue fever symptoms include a high fever, headache,
+                joint and muscular discomfort, nausea, vomiting, and a rash. Dengue can cause dengue hemorrhagic fever,
+                which is characterized by bleeding from the nose, gums, or beneath the skin and can be deadly if not
+                treated rapidly. <br> <br>
+
+                Today, we will visualize the dataset given by Sir Paul Bokingkito. <br><br>
+
+                First, we need to import the necessary dependencies for this project.
+            
+            </p>
+        </div>
+
+        <div class="code" id="section2">
+            <pre><code class="language-python">
+            import pandas as pd
+            import matplotlib.pyplot as plt
+            import seaborn as sns
+            import numpy as np
+            import datetime
+            </code></pre>
+            
+        </div>
+
+        <p>
+            Let's load the dataset.
+        </p>
+
+        <div class="code">
+            <pre><code class="language-python">
+            filename = '/content/doh-epi-dengue-data-2016-2021.csv'
+            data = pd.read_csv(filename)
+            data.head(5)
+            </code></pre>
+        </div>
+
+
+        <div class="image">
+            <img src="img/1.png" alt="data.head()">
+        </div>
+
+
+        <p>
+            Now, the dataset got loaded successfully but we want to 
+            delete the first row as it will just cause errors later.
+            To do that we have to run this code:
+        </p>
+        <div class="code">
+            <pre><code class="language-python">
+                data.drop([0], inplace = True)
+                data.head(5)
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/2.png">
+        </div>
+
+        <p>
+            The first row has been successfully removed. <br>
+            Now, we want to check if there are missing values in our dataset.
+            To do that, we want to run the code below:
+        </p>
+
+        <div class="code">
+            <pre><code class="language-python">
+                data.isnull().sum()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/3.png">
+        </div>
+
+        <p>
+            Since there is only one missing value in the column <code class="language-python">['deaths']</code>, i'm going to drop it.
+        </p>
+
+        <div class="code">
+            <pre><code class="language-python">
+                data = data.dropna()
+                data.isnull().sum()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/4.png">
+        </div>
+
+
+        <p>
+            We want to know the dataypes of each column in our dataset.
+            I want to change the datatype of the column <code class="language-python">['cases']</code> and <code class="language-python">['deaths']</code> into numeric data types.
+            I also want to change the datatype of <code class="language-python">['date']</code> to datetime so that I can freely manipulate it
+            later in the analyzation.   
+        </p>
+
+        <div class="code">
+            <pre><code class="language-python">
+                data.info()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/5.png">
+        </div>
+
+        <div class="code">
+            <pre><code class="language-python">
+                data['cases'] = data['cases'].astype(int)
+                data['deaths'] = data['deaths'].astype(int)
+                data['date'] = pd.to_datetime(data['date'])
+                data.info()
+            </code></pre>
+        </div>
+
+
+        <div class="image">
+            <img src="img/6.png">
+        </div>
+
+
+        <p>
+            Our next step is to clean the dataset first because there might be outliers,
+            and our machine learning model won't be that efficient if we won't clean the dataset.
+            In this project, i want to use the mean and standard deviation to set boundaries,
+            and drop those values below our lower limit and above our upper limit.
+            <br>
+            <br>
+            We first need to get the descriptive statistics of our dataset.
+        </p>
+
+        <div class="code">
+            <pre><code class="language-python">
+                data.describe()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/7.png">
+        </div>
+
+        <p>
+            As we can see in the ['cases'] column, the mean value is very far from the maximum value.
+            That typically means that there are some extreme values, or outliers,
+            in the data set that are skewing the overall distribution.
+            The mean is sensitive to outliers and can be significantly affected by their presence,
+            while the maximum value is not. <br><br>
+            Let us try to display a boxplot to visually see our outliers.
+        </p>
+
+        <div class="code">
+            <pre><code class="language-python">
+                data.plot(kind='box', subplots=True, layout=(3,3), sharex=False, sharey=False, figsize=(15,8))
+                plt.show()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/8.png">
+        </div>
+
+        <p>
+            As we can see, there are so many outliers. Let's try to clean the column ['cases'].
+            To do that, we just need to run the code below.
+        </p>
+
+
+        <div class="code">
+            <pre><code class="language-python">
+                upper_limit= data['cases'].mean() + 3 * data['cases'].std ()
+                lower_limit = data['cases'].mean() - 3 * data['cases'].std () 
+                data = data[(data['cases'] < upper_limit) & (data['cases'] > lower_limit)]
+                data.plot(kind='box', subplots=True, layout=(3,3), sharex=False, sharey=False, figsize=(15,8))
+                plt.show()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/9.png">
+        </div>
+
+        <p>
+            I think this is enough to make our analysis.
+        </p>
+
+        <div class="code">
+            <pre><code class="language-python">
+                data.shape
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <code>(32213, 5)</code>
+        </div>
+
+        <p>
+            Since our dataset has been cleaned of any inaccuracies,
+            inconsistencies or missing values, we can now begin visualizing and analyzing it.
+            This means that we can start to make sense of the data by creating graphical representations
+        </p>
+
+        <div class="code">
+            <pre><code class="language-python">
+                data.corr(method='pearson')
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/10.png">
+        </div>
+
+        <p>
+            The Pearson correlation result of the columns ['deaths'] and ['cases'] is -0.011422.
+            This means that there is a small, negative linear relationship between the two variables being analyzed.
+            A value of -0.011422 would indicate a very weak negative correlation between the two variables.
+            This means that as one variable increases, the other variable decreases, but the correlation is very weak.
+            A value close to 0 indicates that there is no correlation between the two variables.<br><br>
+            We need to the date to datetime since it's in object datatype. Converting an object to datetime
+            is necessary when working with date or time data in a data analysis or data manipulation project.
+            Additionally, converting an object to datetime allows the data to be sorted and filtered based on
+            date and time values. This can be very useful in certain data analysis tasks such as identifying
+            patterns or trends over time.
+            To do that, we just need to run this code:
+        </p>
+
+
+        <div class="code">
+            <pre><code class="language-python">
+                data['date'] = pd.to_datetime(data['date'])
+                data['year'] = pd.to_datetime(data['date']).dt.year
+                data['month'] = pd.to_datetime(data['date']).dt.month
+            </code></pre>
+        </div>
+
+
+        <p id="section3">
+            Now, mowing onto the visualization
+        </p>
+
+        <h6>
+            <strong>Which Year has the most cases?</strong>
+        </h6>
+
+        <div class="code">
+            <pre><code class="language-python">
+                data_groups = data.groupby(['year'])
+                year = []
+                cases = []
+
+                for name, group in data_groups:
+                    year.append(name)
+                    cases.append(group['cases'].sum())
+
+                plt.figure(figsize=(10,8))    
+                sns.barplot(x=year, y=cases, color = 'orange')
+                plt.title('Total number of dengue cases in an year')
+                plt.xlabel('Year', fontsize=16)
+                plt.ylabel('Count', fontsize=16)
+                plt.show()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/11.png">
+        </div>
+
+        <p>
+            As we can see, when looking at the data, the year 2019 has the highest number of reported cases of dengue fever.
+            This trend is a cause for concern and highlights the need for further research and action to 
+            address the issue of dengue fever. It's important to note that the
+            factors that contributed to this increase such as weather conditions, population density,
+            and other factors need to be studied in order to come up with effective solutions and preventative measures.
+        </p>
+
+        <h6 id="section4">
+            Dengue trend from 2016-2021.
+        </h6>
+        <div class="code">
+            <pre><code class="language-python">
+                index = 0
+                monthYears = []
+                years = [i for i in data.year]
+                for i in data.month:
+                    monthYears.append(str(years[index])+'-'+str(i))
+                    index += 1
+
+                plt.figure(figsize=(14,6))
+                sns.lineplot(x=monthYears,y=[i for i in data['cases']])
+                plt.title(label='Dengue Fever Cases From 2016-2021')
+                plt.xlabel(xlabel='month')
+                plt.ylabel(ylabel='Cases')
+                plt.xticks(rotation=90)
+                plt.show()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/13.png">
+        </div>
+
+        <p>
+            As we can see from the lineplot, the highest reported cases of dengue occurred in October 2019.
+            This suggests that the incidence of dengue fever was particularly high during this time period.
+            The spike in cases may be due to a variety of factors such as increased mosquito breeding,
+            increased human-mosquito contact, or a higher level of viral circulation in the population.
+            <br><br> On the other hand, the lowest reported cases of dengue took place in May 2020 and January 2021.
+            This indicates that the incidence of dengue fever was particularly low during these time periods.
+            The decrease in cases may be attributed to a variety of factors such as a decrease in mosquito breeding,
+            decrease in human-mosquito contact, or the implementation of effective control measures.
+
+            <br><br> It's important to note that the number of reported cases of dengue can fluctuate due
+            to a variety of reasons such as changes in weather, mosquito control efforts, and population movement.
+            Additionally, the number of reported cases doesn't necessarily reflect the true number of cases,
+            as many cases of dengue are mild and go unreported.
+        </p>
+
+        <h6 id="section5">
+            <strong>
+                How fatal is Dengue?
+            </strong>
+        </h6>
+
+        <div class="code">
+            <pre><code class="language-python">
+                index = 0
+                monthYears = []
+                years = [i for i in data.year]
+                for i in data.month:
+                    monthYears.append(str(years[index])+'-'+str(i))
+                    index += 1
+
+                plt.figure(figsize=(14,6))
+                sns.lineplot(x=monthYears,y=[i for i in data['cases']])
+                sns.lineplot(x=monthYears,y=[i for i in data['deaths']])
+                plt.title(label='Dengue Mortality Through The Years')
+                plt.xlabel(xlabel='month')
+                plt.ylabel(ylabel='Cases')
+                plt.xticks(rotation=90)
+                plt.show()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/14.png">
+        </div>
+
+        <p>
+            We can observe that the number of dengue deaths is not significant compared to the number of reported cases.
+            However, a noticeable spike in deaths is visible during September and October of 2016, 2017 and 2018,
+            which coincides with the rainy season in the Philippines.
+        </p>
+
+
+
+
+        <h6 id="section6">
+            <strong>Which Region has the highest cases of Dengue Fever?</strong>
+        </h6>
+
+        <div class="code">
+            <pre><code class="language-python">
+                regionCases = []
+                for i in np.unique(data['Region']):
+                    tempDF = data.query("Region == '{}'".format(i))
+                    regionCases.append([sum([i for i in tempDF['cases']]),i])
+                regionCases.sort()
+                x = [i[0] for i in regionCases]
+                y = [i[1] for i in regionCases]
+
+                colors = sns.color_palette("Oranges")
+                plt.figure(figsize=(14,6))
+                sns.barplot(x=x,y=y,palette=colors)
+                plt.title(label='Total cases per region from 2016-2021',pad=35)
+                plt.xlabel(xlabel='Cases',labelpad=35)
+                plt.ylabel(ylabel='Region',labelpad=35)
+                plt.show()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/15.png">
+        </div>
+
+        <p>
+            As we can see from the barplot, the Central Luzon has the highest number of reported cases of dengue,
+            when compared to other regions in the country. This suggests that the incidence of dengue fever is
+            particularly high in this region. The high number of cases could be due to a variety of factors
+            such as a higher population density, increased urbanization, and inadequate mosquito control measures.
+            <br><br>
+            On the other hand, BARMM has the lowest cases of Dengue.
+        </p>
+
+        <h6 id="section7">
+            <strong>Which region has the highest cases per month and year?</strong>
+        </h6>
+
+        <div class="code">
+            <pre><code class="language-python">
+                data_groups = data.groupby(['year'])
+
+                f,axs = plt.subplots(6,1, figsize=(10,40), sharex=False, sharey=False)
+                for i,(year, group) in enumerate(data_groups):
+                    regions = []
+                    cases = []
+                    region_group = group.groupby(['Region'])
+
+                    for region, df in region_group:
+                        regions.append(region)
+                        cases.append(df['cases'].sum())
+                        
+                    sns.barplot(y=regions, x=cases, color='orange', orient='h', ax=axs[i])
+                    axs[i].set_title(year, fontsize=14)
+                    axs[i].set_xlabel("Cases", fontsize=14)
+                    axs[i].set_ylabel("Region", fontsize=14)
+                plt.show() 
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/12.png">
+        </div>
+
+        <p>
+            As we can see, the Central Luzon has the most cases of Dengue fever recorded from years 2017,
+            2019, 2020, and 2021, while in 2016 and 2018, the Region IV -
+            MIMAROPA has the highest reported cases.
+        </p>
+
+        <h6 id="section8">
+            <strong>Lastly, which month and year has the most cases of dengue?</strong>
+        </h6>
+
+        <div class="code">
+            <pre><code class="language-python">
+                index = 0
+                dates = []
+                for i in data['month']:
+                    dates.append(str([j for j in data['year']][index])+'-'+str(i))
+                    index += 1
+                    
+                new_data = {'Date': dates,
+                        'Region': [i for i in data['Region']],
+                        'cases': [i for i in data['cases']],
+                        'deaths': [i for i in data['deaths']]}
+
+                        
+                cleanDF = pd.DataFrame(new_data)
+                cleanDF.head()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/16.png">
+        </div>
+
+        <div class="code">
+            <pre><code class="language-python">
+                uniqueDates = []
+                totalCases = []
+                
+                for i in [j for j in new_data['Date']]:
+                    if i not in uniqueDates:
+                        uniqueDates.append(i)
+                
+                for i in uniqueDates:
+                    tempDF = cleanDF.query("Date == '{}'".format(i))
+                    totalCases.append([datetime.datetime.strptime(i.split('-')[1], '%m').month,
+                                       int(i.split('-')[0]),sum([i for i in tempDF['cases']])])
+                    
+                casesDF = pd.DataFrame(totalCases,columns=['Month','Year','Cases'])
+                plt.figure(figsize=(14,6))
+                sns.heatmap(casesDF.pivot("Month", "Year", "Cases"), cmap="Oranges")
+                plt.title(label='Heatmap of infection cases for months and years in the period of 2016-2021')
+                plt.show()
+            </code></pre>
+        </div>
+
+        <div class="image">
+            <img src="img/17.png">
+        </div>
+
+        <p>
+            From the heatmap generated, we can see that the darkest shade of orange
+            is the intersection of 9 and 2019, which means September 2019 has the highest number of
+            occurrences or highest value in the data set.
+        </p>
+
+        <h6 id="section9">
+            <strong>To sum it all up...</strong>
+        </h6>
+
+        <p>
+            The results generated above show that there is a significant 
+            trend of dengue fever cases in the Philippines, particularly in 2019 with the 
+            highest reported cases in October of that year. The data also shows that the 
+            Central Luzon region has the highest number of reported cases of dengue fever 
+            compared to other regions in the country, which could be due to a higher
+            population density, increased urbanization, and inadequate mosquito control
+            measures. It is important to note that the number of reported cases of dengue 
+            can fluctuate due to various reasons and that the number of reported cases 
+            doesn't necessarily reflect the true number of cases. The data also shows 
+            that the number of dengue deaths is not significant compared to the number 
+            of reported cases, however, there is a noticeable spike in deaths during 
+            September and October of 2016, 2017 and 2018, which coincides with the rainy 
+            season in the Philippines.
+            Overall, the results generated highlight the importance of taking action and implementing effective preventative
+            measures to address the issue of dengue fever in the Philippines.
+        </p>
+
+
+
+    </div>   
+
+    <script src="prism.js"></script>
+    <script src="script.js"></script>
+
+<script src="dengue.min.js"></script>
+<script src="vanta.birds.min.js"></script>
+<script>
+const name = document.getElementById("vanta");    
+VANTA.BIRDS({
+  el: name,
+  mouseControls: true,
+  touchControls: true,
+  gyroControls: false,
+  minHeight: 200.00,
+  minWidth: 200.00,
+  scale: 1.00,
+  scaleMobile: 1.00,
+  backgroundColor: 0x293241,
+  color1: 0xff0000,
+  color2: 0xd1ff
+})
+</script>
+
+</body>
+</html>

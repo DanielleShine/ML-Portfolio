@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>For Regression</title>
+    <!--CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="static/styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+ 
+</head>
+
+
+
+
+<body id="vanta">
+    
+    <div class="login" >
+
+        <nav class="left-nav">
+            <ul class="navi">
+                <li><a href="#">About Dataset</a></li>
+                <p> Dataset contains under given important parameters which are considered mainly during application for Masters Programs. <br> <br>
+                    Parameters description:
+                </p>
+                <ol>GRE Scores ( out of 340 )</ol>
+                <ol>TOEFL Scores ( out of 120 )</ol>
+                <ol>University Rating ( out of 5 )</ol>
+                <ol>Statement of Purpose -(SOP) Strength ( out of 5 )</ol>
+                <ol>Letter of Recommendation-(LOR) Strength ( out of 5 )</ol>
+                <ol>Undergraduate GPA-CGPA ( out of 10 )</ol>
+                <ol>Research Experience ( either 0 or 1 )</ol>
+                <ol>Chance of Admit ( ranging from 0 to 1 )</ol>
+
+                <br><br>
+
+                <p>
+                    Inspiration: <br><br>
+                    Results will help students in shortlisting universities with their profiles. Predicted output can provide students a fair idea about their chances for a particular university.
+                   <br> <a href="https://www.kaggle.com/datasets/mukeshmanral/graduates-admission-prediction">Link to Dataset</a>
+                </p>
+
+            </ul>
+      </nav>
+        
+
+        <form action="{{url_for('predict')}}" method="post">
+          
+            <div>
+              <h5>Chance of Admission</h5>
+            </div>
+
+            <div class="input-text">
+              <input placeholder="GRE Score" type="text" id="gre_score" name="GRE Score" required="required">
+              <input placeholder="TOEFL Score" type="text" id="toefl" name="TOEFL Score" required="required">
+              <input placeholder="University Rating" type="text" id="ur" name="University Rating" required="required">
+              <input placeholder="SOP" type="text" id="sop" name="SOP" required="required">
+              <input placeholder="LOR" type="text" id="lor" name="LOR" required="required">
+              <input placeholder="CGPA" type="text" id="cgpa" name="CGPA" required="required">
+              <input placeholder="Research" type="text" id="research" name="Research" required="required">  
+            </div>
+            
+            <div class="predict">
+              <button type="submit" value="Predict">Predict</button>
+            </div>
+            
+        </form>
+        
+        <br>
+
+        <h5>{{prediction_message}}</h5>
+
+    </div>
+
+
+
+<script src="/static/three.min.js"></script>
+<script src="/static/vanta.fog.min.js"></script>
+<script>
+const name = document.getElementById("vanta");
+  VANTA.FOG({
+  el: name,
+  mouseControls: true,
+  touchControls: true,
+  gyroControls: false,
+  minHeight: 200.00,
+  minWidth: 200.00
+})
+</script>
+<script src="/static/script.js"></script>
+
+</body>
+
+</html>

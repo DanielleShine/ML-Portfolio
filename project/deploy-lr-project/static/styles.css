@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css?family=Fjalla+One&display=swap');
+
+
+*{
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  /* background: #aed9e0; */
+  font-family: "Fjalla One";
+  margin: 0px;
+}
+
+.login h5{
+  text-align: center;
+  padding-top: 20px;
+  color: #353535;
+}
+
+p{
+  text-align: left;
+  padding: 5px 0px;
+  color: #353535;
+}
+
+.login{
+  padding: 10px;
+  position: absolute;
+  border-style: solid;
+  border-width: 2px;
+  border-color: #353535;
+  width: 400px;
+  background: #faf3dd;
+  box-shadow: 10px 10px #ffa69e;
+  margin-left: 500px;
+
+}
+
+form{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+input{
+  display: block;
+  width: 80%;
+  line-height: 28pt;
+  font-size: 14pt;
+  margin-bottom: 5pt;
+  border: none;
+  background-color: #faf3dd;
+  border-bottom: 5px solid #353535;
+  padding-left: 15px;
+  font-size: 15px;
+  outline: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+::placeholder {
+  color: #353535;
+}
+
+
+
+button{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 15px 25px;
+  line-height: 10px;
+  font-size: 15px;
+  background-color: #ffa69e;
+  letter-spacing: 2px;
+  transform: .2s all ease-in-out;
+  text-align: center;
+  outline: none;
+  border: 1px solid #353535;
+  box-shadow: 5px 5px #5e6472;
+  color: #353535;
+}
+
+button:hover{
+  background-color: #353535;
+  color: white;
+  border: 1px solid #353535;
+  box-shadow: #ffa69e;
+}
+
+.predict{
+  text-align: center;
+}
+
+.input-text{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+::selection{
+  background-color: #5e6472;
+}
+
+input:focus{
+  border-bottom: 5px solid #ffa69e;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus{
+  border-bottom: 5px solid #ffa69e;
+  -webkit-text-fill-color: #353535;
+  -webkit-box-shadow: 0 0 0px 1000px #faf3dd inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.left-nav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 500px;
+  height: 100%;
+  background-color: #faf3dd;
+  padding: 20px;
+  border-right: 2px solid #353535;
+}
+
+/* .navi{
+  align-items: center;
+  top: 50%;
+} */
+
+.navi a{
+  color: #353535;
+  text-decoration: none;
+}
+
+li{
+  list-style-type: none;
+  top: 50%;
+  padding: 10px 0px;
+}
+
+/* .left-nav ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+} */
+
+a{
+  text-decoration: none;
+  color: #353535;
+  font-size: 20px;
+}
+
+a:hover{
+  color:#ffa69e;
+}
+
+.left-nav li {
+  text-align: left;
+  margin: 5px;
+}
+
+.navi{
+  padding-top: 30px;
+}
+
+p{
+  margin-left: 5px;
+  font-size: 15px;
+  
+}
+
+p a{
+  font-size: 15px;
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="prism.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script><!--js query-->
+<title>ITD112</title>
+</head>
+
+
+<body>
+    <section class="bg" id = "vanta"><!--NAVIGATION BAR-->
+        <div class="navbar">
+            <div class="element">
+                <a href="index.html">Home</a>
+            </div>
+            <div class="element">
+                <a href="dengue.html">Dengue</a>
+            </div>
+            <div class="element">
+                <a href="proj2.html">Earthquake</a>
+            </div>
+            <div class="element">
+                <a href="covid.html">Covid</a>
+            </div>
+        </div>
+        
+        <div class="title">
+            <h3>Data Visualization</h3>
+            <p>by Danielle Shine Abacial</p>
+        </div>
+    </section>
+    
+<!-- <canvas id="vanta">
+</canvas> -->
+    
+
+<script src="three.min.js"></script>
+<script src="vanta.net.min.js"></script>
+<script>
+
+const name = document.getElementById("vanta");
+VANTA.NET({ 
+  el: name,
+  mouseControls: true,
+  touchControls: true,
+  gyroControls: false,
+  minHeight: 200.00,
+  minWidth: 200.00,
+  scale: 1.00,
+  scaleMobile: 1.00,
+  color: 0xee6c4d,
+  backgroundColor: 0x293241,
+  points: 20.00,
+  maxDistance: 26.00,
+  spacing: 17.00
+})
+</script>
+
+</body>
+</html>
